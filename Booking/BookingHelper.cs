@@ -15,17 +15,12 @@ namespace BookingApp
             var bookings = _repository.GetActiveBookings(1);
 
             bookings.Where(b => b.Id != booking.Id && b.Status != "Cancelled");
-            
+
             var overlappingBooking =
             bookings.FirstOrDefault(
             b =>
-                booking.ArrivalDate >= b.ArrivalDate
-                && booking.ArrivalDate < b.DepartureDate
-                || booking.DepartureDate > b.ArrivalDate
-                && booking.DepartureDate <= b.DepartureDate
-                || booking.ArrivalDate< b.ArrivalDate
-                && booking.DepartureDate> b.DepartureDate);
-            
+            booking.ArrivalDate < b.DepartureDate && b.ArrivalDate < booking.DepartureDate);
+
             return overlappingBooking == null ? string.Empty
             : overlappingBooking.Reference;
         }

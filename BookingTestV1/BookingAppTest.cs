@@ -6,8 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace BookingTestV1    
-{
-    
+{  
     [TestFixture] 
     public class BookingAppTest
     {
@@ -111,7 +110,6 @@ namespace BookingTestV1
             Assert.AreEqual("ref1", result);
         }
 
-
         private DateTime ArivalOn(int year, int month, int day)
         {
             return new DateTime(year, month, day, 14, 0, 0);
@@ -132,6 +130,4 @@ namespace BookingTestV1
             return new DateTime(year, month, day, 10, 0, 0);
         }
     }
-
-
 }
