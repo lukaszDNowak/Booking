@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BookingTestV1    
+namespace BookingTest   
 {  
     [TestFixture] 
     public class BookingAppTest
