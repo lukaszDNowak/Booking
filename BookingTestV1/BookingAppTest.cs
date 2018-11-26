@@ -99,7 +99,7 @@ namespace BookingTestV1
         }
 
         [Test]
-        public void BookingStartsBeforeExistingBookingAndFinishesAfterExistingBooking_ReturnEmptyString()
+        public void BookingStartsBeforeExistingBookingAndFinishesAfterExistingBooking_ReturnRefString()
         {
             var result = BookingHelper.OverlappingBookingsExist(new Booking
             {
@@ -108,7 +108,7 @@ namespace BookingTestV1
                 DepartureDate = After(_existingBooking.DepartureDate, 10)
             },
             _repository.Object);
-            Assert.That(result, Is.Empty);
+            Assert.AreEqual("ref1", result);
         }
 
 

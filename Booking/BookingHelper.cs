@@ -22,7 +22,9 @@ namespace BookingApp
                 booking.ArrivalDate >= b.ArrivalDate
                 && booking.ArrivalDate < b.DepartureDate
                 || booking.DepartureDate > b.ArrivalDate
-                && booking.DepartureDate <= b.DepartureDate);
+                && booking.DepartureDate <= b.DepartureDate
+                || booking.ArrivalDate< b.ArrivalDate
+                && booking.DepartureDate> b.DepartureDate);
             
             return overlappingBooking == null ? string.Empty
             : overlappingBooking.Reference;
