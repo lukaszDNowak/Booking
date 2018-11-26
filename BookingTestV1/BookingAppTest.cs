@@ -7,23 +7,17 @@ using System.Linq;
 
 namespace BookingTestV1    
 {
-
-    [TestFixture]
- 
+    
+    [TestFixture] 
     public class BookingAppTest
     {
+        private Booking _existingBooking;
+        private Mock<IBookingRepository> _repository;
 
         [SetUp]
         public void SetUp()
         {
-            
-
-        }
-
-        [Test]
-        public void BookingStartsAndFinishesBeforeAnExistingBooking_ReturnEmptyString()
-        {
-            Booking _existingBooking = new Booking
+            _existingBooking = new Booking
             {
                 Id = 1,
                 ArrivalDate = ArivalOn(2018, 11, 24),
@@ -32,13 +26,16 @@ namespace BookingTestV1
                 Status = "status"
             };
 
-            var _repository = new Mock<IBookingRepository>();
+            _repository = new Mock<IBookingRepository>();
             _repository.Setup(r => r.GetActiveBookings(1)).Returns(new List<Booking>
             {
               _existingBooking
             }.AsQueryable());
+        }
 
-
+        [Test]
+        public void BookingStartsAndFinishesBeforeAnExistingBooking_ReturnEmptyString()
+        {
             var result = BookingHelper.OverlappingBookingsExist(new Booking
             {
                 Id = 2,
@@ -51,22 +48,7 @@ namespace BookingTestV1
 
         [Test]
         public void BookingStartsBeforeExistingBookingAndEndInBookingTime_ReturnRefString()
-        {
-            Booking _existingBooking = new Booking
-            {
-                Id = 1,
-                ArrivalDate = ArivalOn(2018, 11, 24),
-                DepartureDate = DepartOn(2018, 11, 30),
-                Reference = "ref1",
-                Status = "status"
-            };
-
-            var _repository = new Mock<IBookingRepository>();
-            _repository.Setup(r => r.GetActiveBookings(1)).Returns(new List<Booking>
-            {
-              _existingBooking
-            }.AsQueryable());
-            
+        {  
             var result = BookingHelper.OverlappingBookingsExist(new Booking
             {
                 Id = 2,
@@ -80,21 +62,6 @@ namespace BookingTestV1
         [Test]
         public void BookingStartsInExistingBookingAndEndInBookingTime_ReturnRefString()
         {
-            Booking _existingBooking = new Booking
-            {
-                Id = 1,
-                ArrivalDate = ArivalOn(2018, 11, 24),
-                DepartureDate = DepartOn(2018, 11, 30),
-                Reference = "ref1",
-                Status = "status"
-            };
-
-            var _repository = new Mock<IBookingRepository>();
-            _repository.Setup(r => r.GetActiveBookings(1)).Returns(new List<Booking>
-            {
-              _existingBooking
-            }.AsQueryable());
-
             var result = BookingHelper.OverlappingBookingsExist(new Booking
             {
                 Id = 2,
@@ -108,21 +75,6 @@ namespace BookingTestV1
         [Test]
         public void BookingStartsInExistingBookingAndEndAfterBookingTime_ReturnRefString()
         {
-            Booking _existingBooking = new Booking
-            {
-                Id = 1,
-                ArrivalDate = ArivalOn(2018, 11, 24),
-                DepartureDate = DepartOn(2018, 11, 30),
-                Reference = "ref1",
-                Status = "status"
-            };
-
-            var _repository = new Mock<IBookingRepository>();
-            _repository.Setup(r => r.GetActiveBookings(1)).Returns(new List<Booking>
-            {
-              _existingBooking
-            }.AsQueryable());
-
             var result = BookingHelper.OverlappingBookingsExist(new Booking
             {
                 Id = 2,
@@ -136,25 +88,23 @@ namespace BookingTestV1
         [Test]
         public void BookingStartsAndFinishesAfterAnExistingBooking_ReturnEmptyString()
         {
-            Booking _existingBooking = new Booking
-            {
-                Id = 1,
-                ArrivalDate = ArivalOn(2018, 11, 24),
-                DepartureDate = DepartOn(2018, 11, 30),
-                Reference = "ref1",
-                Status = "status"
-            };
-
-            var _repository = new Mock<IBookingRepository>();
-            _repository.Setup(r => r.GetActiveBookings(1)).Returns(new List<Booking>
-            {
-              _existingBooking
-            }.AsQueryable());
-
             var result = BookingHelper.OverlappingBookingsExist(new Booking
             {
                 Id = 2,
                 ArrivalDate = After(_existingBooking.ArrivalDate, 10),
+                DepartureDate = After(_existingBooking.DepartureDate, 10)
+            },
+            _repository.Object);
+            Assert.That(result, Is.Empty);
+        }
+
+        [Test]
+        public void BookingStartsBeforeExistingBookingAndFinishesAfterExistingBooking_ReturnEmptyString()
+        {
+            var result = BookingHelper.OverlappingBookingsExist(new Booking
+            {
+                Id = 2,
+                ArrivalDate = Before(_existingBooking.ArrivalDate, 10),
                 DepartureDate = After(_existingBooking.DepartureDate, 10)
             },
             _repository.Object);
