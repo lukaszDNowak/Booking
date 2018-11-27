@@ -13,9 +13,7 @@ namespace BookingApp
                 return string.Empty;
 
             var bookings = _repository.GetActiveBookings(1);
-
-            bookings.Where(b => b.Id != booking.Id && b.Status != "Cancelled");
-
+            
             var overlappingBooking =
             bookings.FirstOrDefault(
             b =>
